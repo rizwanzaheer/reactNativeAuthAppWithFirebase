@@ -11,8 +11,10 @@ import {
   Text,
   View
 } from 'react-native';
+import firebase from "firebase";
 
-import { Header } from './components/Common';
+import { Header } from './components/common';
+import LoginForm from './components/LoginForm';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -23,10 +25,21 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  componentWillMount() {
+    firebase.initializeApp({
+      apiKey: "AIzaSyC38AOlczOjOrpjTeqM4OfMniVGUwgUXKM",
+      authDomain: "reactnativeauth-a6e8e.firebaseapp.com",
+      databaseURL: "https://reactnativeauth-a6e8e.firebaseio.com",
+      projectId: "reactnativeauth-a6e8e",
+      storageBucket: "reactnativeauth-a6e8e.appspot.com",
+      messagingSenderId: "1049526188464"
+    });
+  }
   render() {
     return (
       <View>
         <Header headerText="Authentication" />
+        <LoginForm />
         <Text style={styles.instructions}>
           {instructions}
         </Text>
