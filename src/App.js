@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import firebase from "firebase";
 
-import { Header } from './components/common';
+import { Header, Button } from './components/common';
 import LoginForm from './components/LoginForm';
 
 const instructions = Platform.select({
@@ -25,6 +25,7 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  state = { loggedIn: false }
   componentWillMount() {
     firebase.initializeApp({
       apiKey: "AIzaSyC38AOlczOjOrpjTeqM4OfMniVGUwgUXKM",
@@ -34,12 +35,24 @@ export default class App extends Component<Props> {
       storageBucket: "reactnativeauth-a6e8e.appspot.com",
       messagingSenderId: "1049526188464"
     });
+
+    firebase.auth().onAuthStateChanged(user => {
+      user ? this.setState({ loggedIn: true }) : this.setState({ loggedIn: false });
+    });
+  }
+  renderContend() {
+    if (this.state.loggedIn) {
+      return (<Button>
+        Log out
+      </Button>);
+    }
+    return <LoginForm />;
   }
   render() {
     return (
       <View>
         <Header headerText="Authentication" />
-        <LoginForm />
+        {this.renderContend()}
         <Text style={styles.instructions}>
           {instructions}
         </Text>
