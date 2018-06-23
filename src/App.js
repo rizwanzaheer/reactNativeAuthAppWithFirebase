@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import firebase from "firebase";
 
-import { Header, Button } from './components/common';
+import { Header, Button, Spinner } from './components/common';
 import LoginForm from './components/LoginForm';
 
 const instructions = Platform.select({
@@ -25,7 +25,7 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
-  state = { loggedIn: false }
+  state = { loggedIn: null }
   componentWillMount() {
     firebase.initializeApp({
       apiKey: "AIzaSyC38AOlczOjOrpjTeqM4OfMniVGUwgUXKM",
@@ -41,41 +41,44 @@ export default class App extends Component<Props> {
     });
   }
   renderContend() {
-    if (this.state.loggedIn) {
-      return (<Button>
-        Log out
-      </Button>);
+
+    switch (this.state.loggedIn) {
+      case true:
+        return <Button onPress={() => firebase.auth().signOut()}>Log out</Button>;
+      case false:
+        return <LoginForm />;
+      default:
+        return <Spinner size="large" />
     }
-    return <LoginForm />;
   }
   render() {
     return (
       <View>
         <Header headerText="Authentication" />
         {this.renderContend()}
-        <Text style={styles.instructions}>
+        {/* <Text style={styles.instructions}>
           {instructions}
-        </Text>
+        </Text> */}
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#F5FCFF',
+//   },
+//   welcome: {
+//     fontSize: 20,
+//     textAlign: 'center',
+//     margin: 10,
+//   },
+//   instructions: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: 5,
+//   },
+// });
